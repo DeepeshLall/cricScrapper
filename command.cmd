@@ -2,7 +2,7 @@ curl -o log.html -# "http://stats.espncricinfo.com/ci/engine/records/averages/ba
 cat log.html | sed -n -e '/<tbody>/,/<\/tbody>/p' | grep -A 17 '<tr' #all player data just after scrapping
 cat log.html | sed -n -e '/<tbody>/,/<\/tbody>/p' | grep -A 17 '<tr' | sed -n -e '/Bumrah/,/<\/tr>/p' #individual player data just after scrapping
 cat log.html | sed -n -e '/<tbody>/,/<\/tbody>/p' | grep -A 17 '<tr' | sed -n -e '/Bumrah/,/<\/tr>/p' | head -n 5 | tail -n 1 #used for each player individual bating column extraction.Need to initialise a number mapping
-cat log.html | sed -n -e '/<tbody>/,/<\/tbody>/p' | grep -A 17 '<tr' | grep '<a' | awk '{print $5 " " $6}' | sed 's/class="data-link">//g' | sed 's/<\/a><\/td>//g' | wc -l #used for loop count
+cat log.html | sed -n -e '/<tbody>/,/<\/tbody>/p' | grep -A 17 '<tr' | grep '<a' | awk '{print $5 " " $6}' | sed 's/class="data-link">//g' | sed 's/<\/a><\/td>//g' | wc -l #used for loop count or say number of player
 cat log.html | sed -n -e '/<tbody>/,/<\/tbody>/p' | grep -A 17 '<tr' | grep '<a' | awk '{print $5 " " $6}' | sed 's/class="data-link">//g' | sed 's/<\/a><\/td>//g' #Player Name list
 
 #8th column is average of a player
