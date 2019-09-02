@@ -1,6 +1,6 @@
 #/bin/sh
 
-rm -f log.html database.db players_list.tmp
+rm -f log.html database.db players_list.tmp updated_database.db
 
 echo "Datafetch Starting."
 
@@ -18,7 +18,7 @@ while IFS= read -r line; do
     avg_record_cmd="cat log.html | sed -n -e '/<tbody>/,/<\/tbody>/p' | grep -A 17 '<tr' | sed -n -e '/$line/,/<\/tr>/p' | head -n 8 | tail -n 1 | sed 's/<td nowrap=\"nowrap\">//g' | sed 's/<\/td>//g' | sed 's/<td class=\"padDp2\" nowrap=\"nowrap\">-/NA/g'"
     players_average=$(eval $avg_record_cmd)
     # echo $players_average
-    echo $line" | "$players_average >> database.db
+    echo $line" |"$players_average >> database.db
 done < players_list.tmp
 
 echo "CURRENT INDIAN PLAYER AND BATTING AVERAGES."
@@ -34,6 +34,7 @@ rm players_list.tmp
 
 while true
 do
+    echo "OPTIONS"
 	echo "Press [1] to SEARCH."
     echo "Press [2] to UPDATE."
     echo "Press [3] to ADD."
@@ -45,11 +46,55 @@ do
     case $var in
         1)
             #SEARCH
-            
+            echo "Enter The player name to be searched."
+            read player_name
+
+            echo "Batting Average of $player_name"
+            grep "$player_name" database.db | cut -d '|' -f 2
+
         ;;
         2)
             #UPDATE
+            echo "Enter The player name whose details is to be updated."
+            read player_name
 
+            echo "Player Details:"
+            grep "$player_name" database.db
+
+            while true
+            do
+                echo "Press [1] to update name or Press [2] to update Batting average OR Press [3] to go back to selection menu."
+                read var2
+
+                case $var2 in
+                    1) 
+                        echo "Please give the updated name:"
+                        read update_name
+                        sed s/"$player_name"/"$update_name"/g database.db > database.tmp
+                        rm database.db
+                        mv database.tmp database.db
+                        echo "Database updated Successfully."
+                        break
+                    ;;
+                    2)
+                        echo "Please give the updated Batting average:"
+                        read update_score
+                        player_score=$(grep "$player_name" database.db | cut -d '|' -f 2)
+                        sed s/"$player_name |$player_score"/"$player_name | $update_score"/g database.db > database.tmp
+                        rm database.db
+                        mv database.tmp database.db
+                        echo "$player_name | $update_score"
+                        echo "Database updated Successfully."
+                        break
+                    ;;
+                    3)
+                        break
+                    ;;
+                    *)
+                        echo "Enter a valid key"
+                    ;;
+                esac
+            done
         ;;
         3)
             #ADD
