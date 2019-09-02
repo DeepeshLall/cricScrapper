@@ -39,6 +39,7 @@ do
     echo "Press [2] to UPDATE."
     echo "Press [3] to ADD."
     echo "Press [4] to DELETE."
+    echo "Press [5] to view Database."
     echo "Press [Ctrl + C] to exit."
 
     read var
@@ -98,11 +99,26 @@ do
         ;;
         3)
             #ADD
+            echo "Enter player name to be added."
+            read player_name
+            echo "Enter $player_name's Batting average"
+            read batting_avg
 
+            echo "$player_name | $batting_avg" >> database.db
+            echo "Added player's detail to database."
         ;;
         4)
             #DELETE
+            echo "Enter the player name to be removed from Database."
+            read player_name
 
+            sed "/$player_name/d" database.db > database.tmp
+            rm database.db
+            mv database.tmp database.db
+            echo "Player removed from the database successfully."
+        ;;
+        5)
+            cat database.db
         ;;
         *)
             echo "Please Enter valid key."
