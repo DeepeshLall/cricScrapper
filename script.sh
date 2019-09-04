@@ -28,12 +28,11 @@ echo "########################################################################"
 echo "PLAYER NAME | BATTING AVERAGE"
 cat database.db
 
-echo "########################################################################"
-
 rm players_list.tmp
 
 while true
 do
+    echo "########################################################################"
     echo "OPTIONS"
 	echo "Press [1] to SEARCH."
     echo "Press [2] to UPDATE."
