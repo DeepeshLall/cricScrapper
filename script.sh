@@ -48,73 +48,102 @@ do
             #SEARCH
             echo "Enter The player name to be searched."
             read player_name
+            correct_player_name=$(grep "$player_name" database.db | cut -d '|' -f 1)
 
-            echo "Batting Average of $player_name"
-            grep "$player_name" database.db | cut -d '|' -f 2
-
+            if [ "$correct_player_name" != "$player_name " ];
+            then
+                echo "Player Not found in database."
+            else
+                echo "Batting Average of $player_name"
+                grep "$player_name" database.db | cut -d '|' -f 2
+            fi
         ;;
         2)
             #UPDATE
             echo "Enter The player name whose details is to be updated."
             read player_name
 
-            echo "Player Details:"
-            grep "$player_name" database.db
+            correct_player_name=$(grep "$player_name" database.db | cut -d '|' -f 1)
 
-            while true
-            do
-                echo "Press [1] to update name or Press [2] to update Batting average OR Press [3] to go back to selection menu."
-                read var2
+            if [ "$correct_player_name" != "$player_name " ];
+            then
+                echo "Player Not found in database."
+            else
 
-                case $var2 in
-                    1) 
-                        echo "Please give the updated name:"
-                        read update_name
-                        sed s/"$player_name"/"$update_name"/g database.db > database.tmp
-                        rm database.db
-                        mv database.tmp database.db
-                        echo "Database updated Successfully."
-                        break
-                    ;;
-                    2)
-                        echo "Please give the updated Batting average:"
-                        read update_score
-                        player_score=$(grep "$player_name" database.db | cut -d '|' -f 2)
-                        sed s/"$player_name |$player_score"/"$player_name | $update_score"/g database.db > database.tmp
-                        rm database.db
-                        mv database.tmp database.db
-                        echo "$player_name | $update_score"
-                        echo "Database updated Successfully."
-                        break
-                    ;;
-                    3)
-                        break
-                    ;;
-                    *)
-                        echo "Enter a valid key"
-                    ;;
-                esac
-            done
+                echo "Player Details:"
+                grep "$player_name" database.db
+
+                while true
+                do
+                    echo "Press [1] to update name or Press [2] to update Batting average OR Press [3] to go back to selection menu."
+                    read var2
+
+                    case $var2 in
+                        1) 
+                            echo "Please give the updated name:"
+                            read update_name
+                            sed s/"$player_name"/"$update_name"/g database.db > database.tmp
+                            rm database.db
+                            mv database.tmp database.db
+                            echo "Database updated Successfully."
+                            break
+                        ;;
+                        2)
+                            echo "Please give the updated Batting average:"
+                            read update_score
+                            player_score=$(grep "$player_name" database.db | cut -d '|' -f 2)
+                            sed s/"$player_name |$player_score"/"$player_name | $update_score"/g database.db > database.tmp
+                            rm database.db
+                            mv database.tmp database.db
+                            echo "$player_name | $update_score"
+                            echo "Database updated Successfully."
+                            break
+                        ;;
+                        3)
+                            break
+                        ;;
+                        *)
+                            echo "Enter a valid key"
+                        ;;
+                    esac
+                done
+            fi
         ;;
         3)
             #ADD
             echo "Enter player name to be added."
             read player_name
-            echo "Enter $player_name's Batting average"
-            read batting_avg
 
-            echo "$player_name | $batting_avg" >> database.db
-            echo "Added player's detail to database."
+            correct_player_name=$(grep "$player_name" database.db | cut -d '|' -f 1)
+
+            if [ "$correct_player_name" == "$player_name " ];
+            then
+                echo "Player already found in database please update or try different name."
+            else
+                echo "Enter $player_name's Batting average"
+                read batting_avg
+
+                echo "$player_name | $batting_avg" >> database.db
+                echo "Added player's detail to database."
+            fi
         ;;
         4)
             #DELETE
             echo "Enter the player name to be removed from Database."
             read player_name
 
-            sed "/$player_name/d" database.db > database.tmp
-            rm database.db
-            mv database.tmp database.db
-            echo "Player removed from the database successfully."
+            correct_player_name=$(grep "$player_name" database.db | cut -d '|' -f 1)
+
+            if [ "$correct_player_name" != "$player_name " ];
+            then
+                echo "Player Not found in database."
+            else
+
+                sed "/$player_name/d" database.db > database.tmp
+                rm database.db
+                mv database.tmp database.db
+                echo "Player removed from the database successfully."
+            fi
         ;;
         5)
             cat database.db
